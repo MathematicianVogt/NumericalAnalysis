@@ -56,7 +56,7 @@ class ModifiedEuler:
 
 
 
-x=RungeKutta("t",-100,100,100,5000)
+x=ModifiedEuler("y",0,100,100000,1)
 x.generateSolution()
 
 
