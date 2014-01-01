@@ -22,7 +22,7 @@ class RungeKutta:
 	 	w=float(self.IC)
 	 	inputs.append(t)
 	 	outputs.append(w)
-	 	for i in range(1,self.n):
+	 	for i in range(1,self.n+1):
 	 		k1=self.evalFun(self.differentialEquation,t,w)
 	 		k2=self.evalFun(self.differentialEquation,t +(h/2.0),w+(float(k1)/2.0))
 	 		k3=self.evalFun(self.differentialEquation,t +(h/2.0),w+(float(k2)/2.0))
@@ -60,7 +60,7 @@ class RungeKutta:
 
 
 
-x=RungeKutta("t",0,10,100,0)
+x=RungeKutta("t",-100,100,100,5000)
 x.generateSolution()
 
 
