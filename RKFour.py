@@ -1,4 +1,5 @@
 #Runge Kutta Fourth Order Numerical
+#Ryan Vogt Applied Mathematics and Computer Science Major at RIT
 import pylab
 import math
 class RungeKutta:
@@ -24,9 +25,9 @@ class RungeKutta:
 	 	outputs.append(w)
 	 	for i in range(1,self.n+1):
 	 		k1=self.evalFun(self.differentialEquation,t,w)
-	 		k2=self.evalFun(self.differentialEquation,t +(h/2.0),w+(float(k1)/2.0))
-	 		k3=self.evalFun(self.differentialEquation,t +(h/2.0),w+(float(k2)/2.0))
-	 		k4=self.evalFun(self.differentialEquation,t +(h),w+(float(k3)))
+	 		k2=self.evalFun(self.differentialEquation,t +(h/2.0),w+(float(h*k1)/2.0))
+	 		k3=self.evalFun(self.differentialEquation,t +(h/2.0),w+(float(h*k2)/2.0))
+	 		k4=self.evalFun(self.differentialEquation,t +(h),w+(float(h*k3)))
 	 		w=w+((h/6.0)*(k1+(2*k2)+(2*k3)+k4))
 	 		t=self.a+(i*h)
 	 		inputs.append(t)
@@ -39,7 +40,7 @@ class RungeKutta:
 	 	inputs,outputs=self.rungeKutta()
 	 	print self.showOutput(inputs,outputs)
 	 	pylab.title("Solution to y'=" +self.differentialEquation)
-	 	pylab.plot(inputs,outputs,'co')
+	 	pylab.plot(inputs,outputs,'r.')
 	 	xlow=min(inputs)
 	 	xhigh=max(inputs)
 	 	ylow=min(outputs)
@@ -48,6 +49,8 @@ class RungeKutta:
 	 	pylab.xlim([math.ceil(xlow-0.5*(xhigh-xlow)), math.ceil(xhigh+0.5*(xhigh-xlow))])
 	 	pylab.show()
 	 	print "Done"
+	 
+
 	 def showOutput(self,input,output):
 	 	solutionOutput="t------y(t)" +"\n"
 	 	for x in range(len(input)):
@@ -60,7 +63,7 @@ class RungeKutta:
 
 
 
-x=RungeKutta("t",-100,100,100,5000)
+x=RungeKutta("y",0,10,10000,1)
 x.generateSolution()
 
 
