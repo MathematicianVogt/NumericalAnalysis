@@ -17,12 +17,16 @@ class NewtonsMethod:
 			p=self.p0 - (self.evalFun(self.function,self.p0)/self.x.getDerivative())
 
 			if((math.fabs(self.p0-p))<=self.tol):
-				return p
+				return str(p) + " i:" + str(i)
 				break
 			i=i+1
 			self.p0=p
 			self.x.updateEvaluationPoint(self.p0)
 
+	def returnI(self,i):
+		return i
 
-t=NewtonsMethod("math.pow(x,2)-(4*x)+4",1000,1000,0)
-print "Solution Found at " + str(t.getRoot())
+
+
+t=NewtonsMethod("math.pow(x,2)-(4*x)+4",5,1000,.00001)
+print "Solution Found at " + t.getRoot()
