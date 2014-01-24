@@ -63,7 +63,7 @@ class RungeKutta:
 
 
 
-x=RungeKutta("y",0,10,10000,1)
+x=RungeKutta("math.cos(t)",0,10,10000,0)
 x.generateSolution()
 
 
