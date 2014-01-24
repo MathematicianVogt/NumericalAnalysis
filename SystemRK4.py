@@ -22,14 +22,31 @@ class SystemSolver:
 		return basicList
 	
 	def generateLastElementsOfSolution(self,myList):
-
+		print myList[0][-1]
 		if(len(myList)==1):
 			return float(myList[0][-1])
 
 		return float(myList[0][-1]),self.generateLastElementsOfSolution(myList[1:])
+	def normalizeList(self,myTuple):
+		finalList=[]
+		print myTuple
+		print "sdfasg"
+		for x in myTuple:
+			if isinstance(x,tuple):
+				print "yes"
+				finalList=finalList+list(x)
+			else:
+				finalList.append(x)
+				
+		
+		return tuple(finalList) 
+
+
+
 	def combineListsToTuple(self,tlist,myTuple):
 		thisList=list(myTuple)
-		return tuple(tlist+thisList)
+		final=tlist+thisList
+		return tuple(final)
 
 	def ajustTuple(self,tPlus,wPlus,wMultuplier,theTuple):
 		myTuple=list(theTuple)
@@ -54,6 +71,7 @@ class SystemSolver:
 		for x in range(self.lengthOfList(ICS)):
 			solutionList[x].append(ICS[x])
 
+		print solutionList
 		#form ODES
 		for x in ODES:
 			lambdaString="lambda " + varsForOdes + ":" + x
@@ -61,10 +79,15 @@ class SystemSolver:
 		
 		for x in range(1,self.N+1):
 			starting=0
-			basicEvaluation=self.generateLastElementsOfSolution(solutionList)
+			myEval=self.generateLastElementsOfSolution(solutionList)
+			basicEvaluation=self.normalizeList(myEval)
+			print solutionList
+			print basicEvaluation
 			totalEvaluationTuple=self.combineListsToTuple(self.lastElementofList(independentVariableslist),basicEvaluation)
+			print totalEvaluationTuple
 			for lambdaODE in lambdaODES:
 				currentODE=lambdaODE
+				print str(currentODE(*totalEvaluationTuple))
 				k1=h*currentODE(*totalEvaluationTuple)
 				k2=h*currentODE(*self.ajustTuple(h/2.0,k1,.5,totalEvaluationTuple))
 				k3=h*currentODE(*self.ajustTuple(h/2.0,k2,.5,totalEvaluationTuple))
@@ -83,7 +106,7 @@ class SystemSolver:
 		pylab.show()
 
 
-x=SystemSolver("t,x,y","y,-x","0,1",0,6.28,1000)
+x=SystemSolver("t,x,y,z","y,-x,z","0,1,.5",0,6.28,1000)
 x.SolveSystemAndGraphSolution()
 
 
