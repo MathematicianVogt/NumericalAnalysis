@@ -12,7 +12,31 @@ class SystemSolver:
 		self.a=a
 		self.b=b
 		self.N=N
+		self.LegendForGraphs=[]
 	
+	def makeLegends(self):
+		variableList=self.parseStringintoList(self.vars)
+		ODEList=self.parseStringintoList(self.ODES)
+		indepdentVariable=variableList[0]
+		for x in range(len(ODEList)):
+			self.LegendForGraphs.append("Solution curve for d" + str(variableList[x+1]) + "/d" + str(indepdentVariable) + " =" +str(ODEList[x]))
+
+
+	def findLowest(self,myList):
+		lowest=float(myList[0][0])
+		for x in myList:
+			for i in range(len(x)):
+				if(float(x[i])<lowest):
+					lowest=float(x[i])
+		return lowest
+	def findGreatest(self,myList):
+		greatest=float(myList[0][0])
+		for x in myList:
+			for i in range(len(x)):
+				if(float(x[i])>greatest):
+					greatest=float(x[i])
+		return greatest
+
 	def lengthOfList(self,myList):
 		return len(myList)
 	def parseStringintoList(self,string):
@@ -22,27 +46,10 @@ class SystemSolver:
 		return basicList
 	
 	def generateLastElementsOfSolution(self,myList):
-		print myList[0][-1]
-		if(len(myList)==1):
-			return float(myList[0][-1])
-
-		return float(myList[0][-1]),self.generateLastElementsOfSolution(myList[1:])
-	def normalizeList(self,myTuple):
 		finalList=[]
-		print myTuple
-		print "sdfasg"
-		for x in myTuple:
-			if isinstance(x,tuple):
-				print "yes"
-				finalList=finalList+list(x)
-			else:
-				finalList.append(x)
-				
-		
-		return tuple(finalList) 
-
-
-
+		for x in myList:
+			finalList.append(float(x[-1]))
+		return tuple(finalList)
 	def combineListsToTuple(self,tlist,myTuple):
 		thisList=list(myTuple)
 		final=tlist+thisList
@@ -50,7 +57,6 @@ class SystemSolver:
 
 	def ajustTuple(self,tPlus,wPlus,wMultuplier,theTuple):
 		myTuple=list(theTuple)
-		myTuple[0]=myTuple[0]+tPlus
 		for x in range(1,len(list(myTuple))):
 			myTuple[x]=myTuple[x] +(wMultuplier)*wPlus
 		return tuple(myTuple)
@@ -71,7 +77,6 @@ class SystemSolver:
 		for x in range(self.lengthOfList(ICS)):
 			solutionList[x].append(ICS[x])
 
-		print solutionList
 		#form ODES
 		for x in ODES:
 			lambdaString="lambda " + varsForOdes + ":" + x
@@ -80,33 +85,42 @@ class SystemSolver:
 		for x in range(1,self.N+1):
 			starting=0
 			myEval=self.generateLastElementsOfSolution(solutionList)
-			basicEvaluation=self.normalizeList(myEval)
-			print solutionList
-			print basicEvaluation
-			totalEvaluationTuple=self.combineListsToTuple(self.lastElementofList(independentVariableslist),basicEvaluation)
-			print totalEvaluationTuple
+			totalEvaluationTuple=self.combineListsToTuple(self.lastElementofList(independentVariableslist),myEval)
 			for lambdaODE in lambdaODES:
 				currentODE=lambdaODE
-				print str(currentODE(*totalEvaluationTuple))
 				k1=h*currentODE(*totalEvaluationTuple)
 				k2=h*currentODE(*self.ajustTuple(h/2.0,k1,.5,totalEvaluationTuple))
 				k3=h*currentODE(*self.ajustTuple(h/2.0,k2,.5,totalEvaluationTuple))
 				k4=h*currentODE(*self.ajustTuple(0,k3,1,totalEvaluationTuple))
 				w=float(solutionList[starting][-1])+(k1+(2*k2)+(2*k3)+k4)/6.0
-				print str(w)
 				solutionList[starting].append(w)
 				starting=starting+1
 
 				#adding more later
 			newT=self.a+(x*h)
 			independentVariableslist.append(newT)
+		
 
+		self.makeLegends()
+		legendNumber=0
 		for x in solutionList:
-			pylab.plot(independentVariableslist,x)
+			pylab.plot(independentVariableslist,x,label=self.LegendForGraphs[legendNumber])
+			legendNumber=legendNumber+1
+		legendNumber=0
+		xlow=min(independentVariableslist)
+		xhigh=max(independentVariableslist)
+		ylow=self.findLowest(solutionList)
+		yhigh=self.findGreatest(solutionList)
+		
+		pylab.ylim([math.ceil(ylow-0.5*(yhigh-ylow)), math.ceil(yhigh+0.5*(yhigh-ylow))])
+	 	pylab.xlim([math.ceil(xlow-0.5*(xhigh-xlow)), math.ceil(xhigh+0.5*(xhigh-xlow))])
+		pylab.legend()
+		pylab.title("Solution to Systems of Ordinary Differential Equations")
 		pylab.show()
+		print "Done"
 
 
-x=SystemSolver("t,x,y,z","y,-x,z","0,1,.5",0,6.28,1000)
+x=SystemSolver("t,x,y","y,-x","0,1",0,10,1000)
 x.SolveSystemAndGraphSolution()
 
 
