@@ -117,10 +117,12 @@ class SystemSolver:
 		pylab.legend()
 		pylab.title("Solution to Systems of Ordinary Differential Equations")
 		pylab.show()
+		pylab.plot(solutionList[0],solutionList[1])
+		pylab.show()
 		print "Done"
 
 
-x=SystemSolver("t,x,y","y,-x","0,1",0,10,1000)
+x=SystemSolver("t,x,y","y,-x+x*y",".9,.9",0,100,10000)
 x.SolveSystemAndGraphSolution()
 
 
