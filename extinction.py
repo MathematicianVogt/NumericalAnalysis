@@ -55,11 +55,11 @@ class SystemSolver:
 		final=tlist+thisList
 		return tuple(final)
 
-	def ajustTuple(self,tPlus,wPlus,wMultuplier,theTuple):
+	def ajustTuple(self,tPlus,kMultiplier,theTuple,kjList):
 		myTuple=list(theTuple)
 		myTuple[0]=myTuple[0]+ tPlus
 		for x in range(1,len(list(myTuple))):
-			myTuple[x]=myTuple[x] +(wMultuplier)*wPlus
+			myTuple[x]=myTuple[x] +kMultiplier*kjList[x-1]
 		return tuple(myTuple)
 
 	
@@ -82,28 +82,39 @@ class SystemSolver:
 		for x in ODES:
 			lambdaString="lambda " + varsForOdes + ":" + x
 			lambdaODES.append(eval(lambdaString)) 
-		
+	#====================================
 		for x in range(1,self.N+1):
-			starting=0
 			myEval=self.generateLastElementsOfSolution(solutionList)
 			totalEvaluationTuple=self.combineListsToTuple(self.lastElementofList(independentVariableslist),myEval)
+			k1j=[]
+			k2j=[]
+			k3j=[]
+			k4j=[]
 			for lambdaODE in lambdaODES:
 				currentODE=lambdaODE
-				k1=h*currentODE(*totalEvaluationTuple)
-				k2=h*currentODE(*self.ajustTuple(h/2.0,k1,.5,totalEvaluationTuple))
-				k3=h*currentODE(*self.ajustTuple(h/2.0,k2,.5,totalEvaluationTuple))
-				k4=h*currentODE(*self.ajustTuple(0,k3,1,totalEvaluationTuple))
-				w=float(solutionList[starting][-1])+(k1+(2*k2)+(2*k3)+k4)/6.0
-				print str(w)
-				solutionList[starting].append(w)
+				k1j.append(h*currentODE(*totalEvaluationTuple))
+			for lambdaODE in lambdaODES:
+				currentODE=lambdaODE
+				k2j.append(h*currentODE(*self.ajustTuple(h/2.0,.5,totalEvaluationTuple,k1j)))
+			for lambdaODE in lambdaODES:
+				currentODE=lambdaODE
+				k3j.append(h*currentODE(*self.ajustTuple(h/2.0,.5,totalEvaluationTuple,k2j)))
+			for lambdaODE in lambdaODES:
+				currentODE=lambdaODE
+				k4j.append(h*currentODE(*self.ajustTuple(h,1,totalEvaluationTuple,k3j)))
+			starting=0
+			for i in range(1,len(ODES)+1):
+				wj=float(solutionList[starting][-1])+(k1j[i-1]+(2*k2j[i-1])+(2*k3j[i-1])+k4j[i-1])/6.0
+				print str(wj)
+				solutionList[starting].append(wj)
 				starting=starting+1
-
-				#adding more later
 			newT=self.a+(x*h)
 			independentVariableslist.append(newT)
+
+			
 			
 		
-
+		#=================================================
 		self.makeLegends()
 		legendNumber=0
 		for x in solutionList:
@@ -120,16 +131,16 @@ class SystemSolver:
 		pylab.legend()
 		pylab.title("Solution to Systems of Ordinary Differential Equations")
 		pylab.show()
-		pylab.plot(solutionList[0],solutionList[1])
+		pylab.title("x(t) vs t")
+		pylab.plot(independentVariableslist,solutionList[0])
+		pylab.show()
+		pylab.title("y(t) vs z(t)")
+		pylab.plot(solutionList[1],solutionList[2])
 		pylab.show()
 		print "Done"
 
 
 
-x=SystemSolver("t,x,y","y,-x","0,1",0,10,1000)
+x=SystemSolver("t,x,y,z","-1*x*(1-x),2*y*(1-(y/((1-.5)*x +.5))) -.5*z, (1/18.7)*z*(1-(z/(1*y)))",".99,.75,.73",0,100,10000)
 x.SolveSystemAndGraphSolution()
-
-
-
-
 
