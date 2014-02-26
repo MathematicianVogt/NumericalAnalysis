@@ -5,14 +5,14 @@ import math
 import pylab
 
 class SystemSolver:
-	def __init__(self,odeVars,ODES,ICS,a,b,N):
+	def __init__(self,odeVars,ODES,ICS,a,b,h):
 		self.vars=odeVars
 		self.ODES=ODES
 		self.ICS=ICS
 		self.a=a
 		self.b=b
-		self.N=N
 		self.LegendForGraphs=[]
+		self.h=h
 	
 	def makeLegends(self):
 		variableList=self.parseStringintoList(self.vars)
@@ -64,7 +64,7 @@ class SystemSolver:
 
 	
 	def SolveSystemAndGraphSolution(self):
-		h=(self.b-self.a)/float(self.N)
+		h=self.h
 		lambdaODES=[]
 		
 		independentVariableslist=[]
@@ -83,40 +83,26 @@ class SystemSolver:
 			lambdaString="lambda " + varsForOdes + ":" + x
 			lambdaODES.append(eval(lambdaString)) 
 	#====================================
-		for x in range(1,self.N+1):
+		newT=self.a
+		x=1
+		while(self.b>=newT):
 			myEval=self.generateLastElementsOfSolution(solutionList)
 			totalEvaluationTuple=self.combineListsToTuple(self.lastElementofList(independentVariableslist),myEval)
-			k1j=[]
-			k2j=[]
-			k3j=[]
-			k4j=[]
-			for lambdaODE in lambdaODES:
-				currentODE=lambdaODE
-				k1j.append(h*currentODE(*totalEvaluationTuple))
-			for lambdaODE in lambdaODES:
-				currentODE=lambdaODE
-				k2j.append(h*currentODE(*self.ajustTuple(h/2.0,.5,totalEvaluationTuple,k1j)))
-			for lambdaODE in lambdaODES:
-				currentODE=lambdaODE
-				k3j.append(h*currentODE(*self.ajustTuple(h/2.0,.5,totalEvaluationTuple,k2j)))
-			for lambdaODE in lambdaODES:
-				currentODE=lambdaODE
-				k4j.append(h*currentODE(*self.ajustTuple(h,1,totalEvaluationTuple,k3j)))
+			print totalEvaluationTuple
 			starting=0
-			for i in range(1,len(ODES)+1):
-				wj=float(solutionList[starting][-1])+(k1j[i-1]+(2*k2j[i-1])+(2*k3j[i-1])+k4j[i-1])/6.0
+			for lambdaODE in lambdaODES:
+				currentODE=lambdaODE
+				wj=float(solutionList[starting][-1])+ h*currentODE(*totalEvaluationTuple)
 				solutionList[starting].append(wj)
 				starting=starting+1
 			newT=self.a+(x*h)
+			x=x+1
 			independentVariableslist.append(newT)
 
 			
 			
 		
 		#=================================================
-		print str(solutionList[1][-1])
-		print str(solutionList[2][-1])
-
 		self.makeLegends()
 		legendNumber=0
 		for x in solutionList:
@@ -128,30 +114,23 @@ class SystemSolver:
 		ylow=self.findLowest(solutionList)
 		yhigh=self.findGreatest(solutionList)
 		
-		#pylab.ylim([math.ceil(ylow-0.5*(yhigh-ylow)), math.ceil(yhigh+0.5*(yhigh-ylow))])
-	 	#pylab.xlim([math.ceil(xlow-0.5*(xhigh-xlow)), math.ceil(xhigh+0.5*(xhigh-xlow))])
-	 	pylab.ylim(-10, 10)
-	 	pylab.xlim(-10, 10)
+		pylab.ylim([math.ceil(ylow-0.5*(yhigh-ylow)), math.ceil(yhigh+0.5*(yhigh-ylow))])
+	 	pylab.xlim([math.ceil(xlow-0.5*(xhigh-xlow)), math.ceil(xhigh+0.5*(xhigh-xlow))])
 		pylab.legend()
 		pylab.title("Solution to Systems of Ordinary Differential Equations")
 		pylab.title("x(t) vs t")
 		pylab.plot(independentVariableslist,solutionList[0])
-		pylab.savefig("RungeKutta-x(t)vst-rx=0,x0=.99,y0=.74625,z0=.74625.png")
+		pylab.savefig("Euler-x(t)vst-rx=0,x0=.99,y0=.75,z0=.73.png")
 		pylab.show()
-		pylab.ylim(-10, 10)
-	 	pylab.xlim(-10, 10)
 		pylab.title("y(t) vs z(t)")
 		pylab.plot(solutionList[1],solutionList[2])
-		pylab.savefig("RungeKutta-y(t)vsz(t)-rx=0,x0=.99,y0=.74625,z0=.74625.png")
+		pylab.savefig("Euler-y(t)vsz(t)-rx=0,x0=.99,y0=.75,z0=.73.png")
 		pylab.show()
 		print "Done"
-		print str(solutionList[1])
-		print str(solutionList[2])
 
 
-
-#x=SystemSolver("t,x,y","y,-x","0,1",0,2*math.pi,100)
-x=SystemSolver("t,x,y,z","0,2*y*(1-(y/((1-.5)*x +.5))) -.5*z, (1/18.7)*z*(1-(z/(1*y)))",".99,.74625,.74625",0,1000,100000)
+#x=SystemSolver("t,x,y","-y,x","1,0",0,2*math.pi,.001)
+x=SystemSolver("t,x,y,z","0,2*y*(1-(y/((1-.5)*x +.5))) -.5*z, (1/18.7)*z*(1-(z/(1*y)))",".99,.75,.73",0,100,.001)
 x.SolveSystemAndGraphSolution()
 
 
