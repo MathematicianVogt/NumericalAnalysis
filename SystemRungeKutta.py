@@ -131,18 +131,18 @@ class SystemSolver:
 		#pylab.ylim([math.ceil(ylow-0.5*(yhigh-ylow)), math.ceil(yhigh+0.5*(yhigh-ylow))])
 	 	#pylab.xlim([math.ceil(xlow-0.5*(xhigh-xlow)), math.ceil(xhigh+0.5*(xhigh-xlow))])
 	 	pylab.ylim(-10, 10)
-	 	pylab.xlim(-10, 10)
+	 	pylab.xlim(-10, 1000)
 		pylab.legend()
 		pylab.title("Solution to Systems of Ordinary Differential Equations")
-		pylab.title("x(t) vs t")
 		pylab.plot(independentVariableslist,solutionList[0])
-		pylab.savefig("RungeKutta-x(t)vst-rx=0,x0=.99,y0=.74625,z0=.74625.png")
+		pylab.savefig("RungeKutta-x(t)vst-rx=-1,x0=.99,y0=.74625,z0=.74625.png")
 		pylab.show()
-		pylab.ylim(-10, 10)
-	 	pylab.xlim(-10, 10)
+		pylab.ylim(-100, 10)
+	 	pylab.xlim(-10, 100)
+
 		pylab.title("y(t) vs z(t)")
 		pylab.plot(solutionList[1],solutionList[2])
-		pylab.savefig("RungeKutta-y(t)vsz(t)-rx=0,x0=.99,y0=.74625,z0=.74625.png")
+		pylab.savefig("RungeKutta-y(t)vsz(t)-rx=-1,x0=.99,y0=.74625,z0=.74625.png")
 		pylab.show()
 		print "Done"
 		print str(solutionList[1])
@@ -151,7 +151,7 @@ class SystemSolver:
 
 
 #x=SystemSolver("t,x,y","y,-x","0,1",0,2*math.pi,100)
-x=SystemSolver("t,x,y,z","0,2*y*(1-(y/((1-.5)*x +.5))) -.5*z, (1/18.7)*z*(1-(z/(1*y)))",".99,.74625,.74625",0,1000,100000)
+x=SystemSolver("t,x,y,z","-x*(1-x),2*y*(1-(y/((1-.5)*x +.5))) -.5*z, (1/18.7)*z*(1-(z/(1*y)))",".99,.74625,.74625",0,1000,100000)
 x.SolveSystemAndGraphSolution()
 
 
