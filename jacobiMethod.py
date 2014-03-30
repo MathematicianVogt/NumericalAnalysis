@@ -18,7 +18,7 @@ class jacobi:
 	 	D=A-R
 	 	xn1=(D.I*(b-R*x))
 
-	 	for x in range(0,10000):
+	 	while(math.fabs(np.linalg.norm((x-xn1),2))>TOL):
 	 		x=xn1
 	 		xn1=(D.I*(b-R*x))
 

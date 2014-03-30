@@ -18,7 +18,7 @@ class SOR:
 	 	L=tril(A)-D
 	 	U=A-L-D
 	 	xn1=((D+(w*L)).I)*(w*b - (w*U +(w-1)*D)*x)
-	 	for t in range(0,10000):
+	 	while(math.fabs(np.linalg.norm((x-xn1),2))>TOL):
 	 		x=xn1
 	 		xn1=((D+(w*L)).I)*(w*b - (w*U +(w-1)*D)*x)
 
