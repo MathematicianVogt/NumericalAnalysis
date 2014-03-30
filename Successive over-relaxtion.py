@@ -1,5 +1,7 @@
 from scipy import *
 from numpy import *
+import numpy as np
+import math
 
 class SOR:
 	def __init__(self,A,b,TOL,x,w):
