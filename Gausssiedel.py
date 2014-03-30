@@ -16,6 +16,8 @@ class gausssiedel:
 	 	x=self.x
 	 	L=tril(A)
 	 	U=A-L
+	 	print L
+	 	print U
 	 	xn1=(L.I*(b-U*x))
 
 	 	for x in range(0,10000):
