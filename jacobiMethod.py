@@ -18,13 +18,15 @@ class jacobi:
 	 	x=self.x
 	 	R=diag(diag(A))
 	 	D=A-R
+	 	counter=0
 	 	xn1=(D.I*(b-R*x))
 
 	 	while(math.fabs(np.linalg.norm((x-xn1),2))>TOL):
 	 		x=xn1
 	 		xn1=(D.I*(b-R*x))
+	 		counter++
 
-	 	print "Soltuion found within " + str(self.tol)+ "\n" + str(xn1)
+	 	print "Soltuion found within " + str(self.tol)+ "\n" + str(xn1) + " in " +str(counter) "itterations"
 
 x=jacobi('[5 25; 1 3]','[10,18]', .1, '[1,1]')
 x.jacobiAlgo()

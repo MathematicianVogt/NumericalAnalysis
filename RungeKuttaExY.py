@@ -90,6 +90,10 @@ class SystemSolver:
 			for lambdaODE in lambdaODES:
 				currentODE=lambdaODE
 				k1=h*currentODE(*totalEvaluationTuple)
+				#print k1
+				#print currentODE
+				#print totalEvaluationTuple
+				#print str(k1)
 				k2=h*currentODE(*self.ajustTuple(h/2.0,k1,.5,totalEvaluationTuple))
 				k3=h*currentODE(*self.ajustTuple(h/2.0,k2,.5,totalEvaluationTuple))
 				k4=h*currentODE(*self.ajustTuple(0,k3,1,totalEvaluationTuple))

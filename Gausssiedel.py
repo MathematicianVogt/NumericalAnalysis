@@ -19,6 +19,7 @@ class gausssiedel:
 	 	L=tril(A)
 	 	U=A-L
 	 	TOL=self.tol
+	 	counter=0
 	 	print L
 	 	print U
 	 	xn1=(L.I*(b-U*x))
@@ -26,8 +27,9 @@ class gausssiedel:
 	 	while(math.fabs(np.linalg.norm((x-xn1),2))>TOL):
 	 		x=xn1
 	 		xn1=(L.I*(b-U*x))
+	 		counter++
 
-	 	print "Soltuion found within " + str(self.tol)+ "\n" + str(xn1)
+	 	print "Soltuion found within " + str(self.tol)+ "\n" + str(xn1) + " in " +str(counter) "itterations"
 
 x=gausssiedel('[2 2; 4 7]','[8,22]', .001, '[1,1]')
 x.gaussAlgo()

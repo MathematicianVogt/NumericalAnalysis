@@ -19,12 +19,14 @@ class SOR:
 	 	D=diag(diag(A))
 	 	L=tril(A)-D
 	 	U=A-L-D
+	 	counter=0
 	 	xn1=((D+(w*L)).I)*(w*b - (w*U +(w-1)*D)*x)
 	 	while(math.fabs(np.linalg.norm((x-xn1),2))>TOL):
 	 		x=xn1
 	 		xn1=((D+(w*L)).I)*(w*b - (w*U +(w-1)*D)*x)
+	 		counter++
 
-	 	print "Soltuion found within " + str(self.tol)+ "\n" + str(xn1)
+	 	print "Soltuion found within " + str(self.tol)+ "\n" + str(xn1) + " in " +str(counter) "itterations"
 
 x=SOR('[2 2; 4 7]','[8,20]', .1, '[1,1]',1.1)
 x.SORAlgo()
