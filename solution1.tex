@@ -1,0 +1,47 @@
+
+
+\documentclass{sig-alternate}
+\usepackage{float}
+\usepackage{url}
+\usepackage{color}
+\usepackage{enumerate}
+\usepackage{balance}
+\permission{}
+\CopyrightYear{2014}
+
+\begin{document}
+
+\title{Solutions Homework 01}
+\numberofauthors{1}
+\author{
+\alignauthor
+Ryan Vogt
+}
+\date{1 September 2014}
+\maketitle
+
+\section{1.1}
+\label{overview}
+
+\begin{verbatim}
+--Herons method, check if the next step is on the same order as the old itteration.
+--If so solution is found to order epsilon
+--else recurse with the next value as the starting
+herons :: (Num a,Fractional a, Ord a)=>a->a->a->a
+herons c x0 epsilon = if((abs (x1-x0))<epsilon)
+							then x1
+							else herons c x1 epsilon
+							where 
+								x1 = (1/2)*(x0 +(c/x0))
+\end{verbatim}
+
+\balance
+\end{document}
+
+
+
+
+
+
+
+

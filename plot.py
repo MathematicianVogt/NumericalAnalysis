@@ -42,6 +42,7 @@ def Graph2DSolutions(dataList,title,xlabel,ylabel,xMin,xMax,yMin,yMax):
 	plt.ylim([yMin,yMax])
 	plt.xlim([xMin,xMax])
 	plt.savefig(title)
+	plt.clf()
 def Scatter2D(xList,yList,title,xlabel,ylabel,xMin,xMax,yMin,yMax):
 	plt.scatter(xList,yList,s=1,marker='.')
 	plt.title(title)
