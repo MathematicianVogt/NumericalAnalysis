@@ -36,7 +36,7 @@ def Graph3DSolution(dataList,title,xLabel,yLabel,zLabel):
 	plt.show()
 def Graph2DSolutions(dataList,title,xlabel,ylabel,xMin,xMax,yMin,yMax):
 	plt.plot(*zip(*dataList))
-	plt.title(title)
+	#plt.title(title)
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
 	plt.ylim([yMin,yMax])
